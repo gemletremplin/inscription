@@ -242,7 +242,7 @@
             html.push(`<div class="day">`);
             html.push(`<h2 class="ui header">${d[0].date.format("dddd DD MMMM YYYY")}</h2>`);
             if (d.length >= MAX_USER) {
-              html.push(warning('Complet', `<div>Il y a déjà ${d.length} personnes inscrites pour ce jour-ci.</div><div>Le nombre de personne pouvant être présente dans les locaux étant limitée, merci de ne pas vous inscrire pour cette date.</div>`));
+              html.push(warning('Complet', `<div>Il y a déjà ${d.length} personnes inscrites pour ce jour-ci.</div><div>Le nombre de personne pouvant être présente dans les locaux étant limité à ${MAX_USER}, merci de ne pas vous inscrire pour cette date.</div>`));
             }
             html.push(`<table class="ui unstackable single line striped blue table">`);
             html.push(`<tbody>`);
