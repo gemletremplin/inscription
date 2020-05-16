@@ -87,8 +87,11 @@
       box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
     }
     .navbar {
-      margin: 10px 0 30px 0 !important;
+      margin: 10px 0 10px 0 !important;
       padding: 0 !important;
+    }
+    #opening {
+      margin-bottom: 40px;
     }
     body > .ui > .content {
       padding-bottom: 80px;
@@ -107,6 +110,7 @@
         Inscriptions GEM Le Tremplin
       </div>
     </h1>
+
     <div class="ui stackable menu navbar">
       <a class="item" href="/inscription/">
         <i class="home icon"></i>
@@ -132,8 +136,10 @@
         </div>
       </div>
     </div>
+
     <div class="content">
-      <div id="days" class="ui container"></div>
+      <div id="opening"></div>
+      <div id="days"></div>
       <div id="loading" class="ui active inverted dimmer">
         <div class="ui text loader">Chargement des données...</div>
       </div>
@@ -151,6 +157,7 @@
   <script>
     const MAX_USER = 5;
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/1Jitq0UBTp6KNyQrptDvDBB94iNey1-MHJ218cCNY20o/export?format=csv'
+    const OPENING_TIME = "Mardi 19, Vendredi 22 et Samedi 23 Mai 2020, de 14h à 18h.";
 
     moment.locale("fr");
 
@@ -163,6 +170,20 @@
               ${title}
             </div>
             ${description}
+          </div>
+        </div>
+      `;
+    }
+
+    function opening() {
+      return `
+        <div class="ui info icon message">
+          <i class="calendar alternate outline icon"></i>
+          <div class="content">
+            <div class="header">
+              Horaires d'ouverture
+            </div>
+            ${OPENING_TIME}
           </div>
         </div>
       `;
@@ -222,6 +243,7 @@
 
     $(document).ready(() => {
       $('.ui.dropdown').dropdown();
+      $("#opening").html(opening());
 
       $('#show-created').on('click', function() {
         for (let el of document.getElementsByClassName('created')) {
