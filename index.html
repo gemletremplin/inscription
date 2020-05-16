@@ -78,14 +78,6 @@
     .day {
       margin-bottom: 40px;
     }
-    .floating-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 20px 10px 20px;
-      background-color: #ffffff;
-      box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
-    }
     .navbar {
       margin: 10px 0 10px 0 !important;
       padding: 0 !important;
@@ -117,9 +109,9 @@
         <i class="home icon"></i>
         Accueil
       </a>
-      <a class="item" href="https://forms.gle/E3C5eN5mR94x5b2P6" target="_blank">
-        <i class="pencil icon"></i>
-        Inscription
+      <a id="add-opening-day" class="item" target="_blank">
+        <i class="plus icon"></i>
+        Ajouter un jour d'ouverture
       </a>
       <div class="right menu">
         <a class="item" href="https://gemletremplin.fr">
@@ -146,11 +138,6 @@
       </div>
     </div>
 
-    <a class="floating-btn" target="_blank" href="https://forms.gle/E3C5eN5mR94x5b2P6">
-      <span class="ui circular blue icon button"><i class="pencil icon"></i></span>
-      <span>S'inscrire sur une journée</span>
-    </a>
-
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment-with-locales.min.js"></script>
@@ -158,9 +145,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
   <script>
-    const MAX_USER = 5;
+    const MAX_USER = 6;
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/1Jitq0UBTp6KNyQrptDvDBB94iNey1-MHJ218cCNY20o/export?format=csv'
     const OPENING_TIME = "Mardi 19, Vendredi 22 et Samedi 23 Mai 2020, de 14h à 18h.";
+    const FORM_TPL = "https://docs.google.com/forms/d/e/1FAIpQLSed5CaBRgGD6sQbBx7--twL8g0LXSZzkW9sJu42B-JygmK44w/viewform?usp=pp_url&entry.799232329={name}&entry.117541986={day}+{hour}"
 
     moment.locale("fr");
 
@@ -253,9 +241,18 @@
           .replace(/'/g, "&#039;");
     }
 
+    function formLink(opts) {
+      let link = FORM_TPL;
+      link = link.replace('{day}', opts.day ? opts.day : '');
+      link = link.replace('{hour}', opts.hour ? opts.hour: '');
+      link = link.replace('{name}', opts.name ? opts.name : '');
+      return link;
+    }
+
     $(document).ready(() => {
       $('.ui.dropdown').dropdown();
       $("#opening").html(opening());
+      $('#add-opening-day').attr('href', formLink({name: "Julien ou Bérénice"}));
 
       $('#show-created').on('click', function() {
         for (let el of document.getElementsByClassName('created')) {
@@ -300,6 +297,10 @@
 
             html.push(`</tbody>`);
             html.push(`</table>`);
+            if (d.length < MAX_USER) {
+              let href = formLink({day: d[0].date.format('YYYY-MM-DD'), hour: '14:00'});
+              html.push(`<a class="ui button" href="${href}" target="_blank"><i class="icon pencil"></i> S'inscrire</a>`)
+            }
             html.push(`</div>`);
           }
 
