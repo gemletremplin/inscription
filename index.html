@@ -280,21 +280,32 @@
             let d = data[id];
 
             html.push(`<div class="day">`);
-            html.push(`<h2 class="ui header">${d[0].date.format("dddd DD MMMM YYYY")}</h2>`);
+            html.push(`
+              <h2 class="ui header">
+                ${d[0].date.format("dddd DD MMMM YYYY")}
+              </h2>
+            `);
             if (d.length >= MAX_USER) {
-              html.push(warning('Complet', `<div>Il y a déjà ${d.length} personnes inscrites pour ce jour-ci.</div><div>Le nombre de personne pouvant être présente dans les locaux étant limité à ${MAX_USER}, merci de ne plus vous inscrire pour cette date.</div>`));
+              html.push(warning('Complet', `
+                <div>Il y a déjà ${d.length} personnes inscrites pour ce jour-ci.</div>
+                <div>Le nombre de personne pouvant être présente dans les locaux étant limité à ${MAX_USER}, merci de ne plus vous inscrire pour cette date.</div>
+              `));
             }
-            html.push(`<table class="ui unstackable single line striped blue table">`);
-            html.push(`<tbody>`);
 
             let names = overflow(d);
 
+            html.push(`<table class="ui unstackable single line striped blue table">`);
+            html.push(`<tbody>`);
             for (let user of d) {
               let overflowClass = names.indexOf(user.name) !== -1 ? ' class="overflow"' : '';
               html.push(`<tr${overflowClass}>`);
               html.push(`<td class="hour one wide">${user.date.format("HH:mm")}</td>`);
               html.push(`<td class="name">${escapeHtml(user.name)}</td>`);
-              html.push(`<td class="created hidden right aligned">${user.created.format('DD/MM/YYYY HH:mm')}</td>`);
+              html.push(`
+                <td class="created hidden right aligned">
+                  ${user.created.format('DD/MM/YYYY HH:mm')}
+                </td>
+              `);
               html.push(`</tr>`);
             }
 
