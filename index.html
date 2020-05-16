@@ -64,6 +64,11 @@
       }
     }
 
+    h1 {
+      margin: 10px 0 0 0 !important;
+      padding: 0 !important;
+    }
+
     h2 {
       text-transform: capitalize !important;
     }
@@ -82,10 +87,11 @@
       box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
     }
     .navbar {
-      margin-top: 10px !important;
+      margin: 10px 0 30px 0 !important;
+      padding: 0 !important;
     }
-    .content {
-      margin-bottom: 100px;
+    body > .ui > .content {
+      padding-bottom: 80px;
     }
     tr.overflow {
       text-decoration: line-through;
@@ -95,23 +101,29 @@
 </head>
 <body>
   <div class="ui container">
-    <div class="ui menu navbar">
+    <h1 class="ui center aligned icon header">
+      <i class="clipboard outline icon"></i>
+      <div class="content">
+        Inscriptions GEM Le Tremplin
+      </div>
+    </h1>
+    <div class="ui stackable menu navbar">
       <a class="item" href="/inscription/">
         <i class="home icon"></i>
-        <span class="mobile hidden">Accueil</span>
+        Accueil
       </a>
       <a class="item" href="https://forms.gle/E3C5eN5mR94x5b2P6" target="_blank">
         <i class="pencil icon"></i>
-        <span class="mobile hidden">Inscription</span>
+        Inscription
       </a>
       <div class="right menu">
         <a class="item" href="https://gemletremplin.fr">
           <i class="globe icon"></i>
-          <span class="mobile hidden">gemletremplin.fr</span>
+          gemletremplin.fr
         </a>
         <div class="ui dropdown item">
           <i class="wrench icon"></i>
-          <span class="mobile hidden">Options</span>
+          Options
           <i class="dropdown icon"></i>
           <div class="menu">
             <a class="item" id="show-created">Afficher <i class="calendar alternate outline icon"></i></a>
@@ -121,12 +133,6 @@
       </div>
     </div>
     <div class="content">
-      <h1 class="ui center aligned icon header">
-        <i class="clipboard outline icon"></i>
-        <div class="content">
-          Inscriptions GEM Le Tremplin
-        </div>
-      </h1>
       <div id="days" class="ui container"></div>
       <div id="loading" class="ui active inverted dimmer">
         <div class="ui text loader">Chargement des données...</div>
