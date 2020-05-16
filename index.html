@@ -302,10 +302,12 @@
             html.push(`</table>`);
             if (d.length < MAX_USER) {
               let href = formLink({day: d[0].date.format('YYYY-MM-DD'), hour: '14:00'});
+              let left = MAX_USER - d.length;
+              let plural = (left > 1) ? 's' : '';
               html.push(`
                 <a class="ui blue basic button" href="${href}">
                   <i class="pencil icon"></i> S'inscrire
-                </a>
+                </a> <span class="ui left pointing label">${left} place${plural} restante${plural}</span>
               `);
             }
             html.push(`</div>`);
