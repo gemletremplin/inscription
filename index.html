@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+  <style>
+    @media only screen and (max-width: 767px) {
+      [class*="mobile hidden"],
+      [class*="tablet only"]:not(.mobile),
+      [class*="computer only"]:not(.mobile),
+      [class*="large screen only"]:not(.mobile),
+      [class*="widescreen only"]:not(.mobile),
+      [class*="or lower hidden"] {
+        display: none !important;
+      }
+    }
+
+    /* Tablet / iPad Portrait */
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      [class*="mobile only"]:not(.tablet),
+      [class*="tablet hidden"],
+      [class*="computer only"]:not(.tablet),
+      [class*="large screen only"]:not(.tablet),
+      [class*="widescreen only"]:not(.tablet),
+      [class*="or lower hidden"]:not(.mobile) {
+        display: none !important;
+      }
+    }
+
+    /* Computer / Desktop / iPad Landscape */
+    @media only screen and (min-width: 992px) and (max-width: 1199px) {
+      [class*="mobile only"]:not(.computer),
+      [class*="tablet only"]:not(.computer),
+      [class*="computer hidden"],
+      [class*="large screen only"]:not(.computer),
+      [class*="widescreen only"]:not(.computer),
+      [class*="or lower hidden"]:not(.tablet):not(.mobile) {
+        display: none !important;
+      }
+    }
+
+    /* Large Monitor */
+    @media only screen and (min-width: 1200px) and (max-width: 1919px) {
+      [class*="mobile only"]:not([class*="large screen"]),
+      [class*="tablet only"]:not([class*="large screen"]),
+      [class*="computer only"]:not([class*="large screen"]),
+      [class*="large screen hidden"],
+      [class*="widescreen only"]:not([class*="large screen"]),
+      [class*="or lower hidden"]:not(.computer):not(.tablet):not(.mobile) {
+        display: none !important;
+      }
+    }
+
+    /* Widescreen Monitor */
+    @media only screen and (min-width: 1920px) {
+      [class*="mobile only"]:not([class*="widescreen"]),
+      [class*="tablet only"]:not([class*="widescreen"]),
+      [class*="computer only"]:not([class*="widescreen"]),
+      [class*="large screen only"]:not([class*="widescreen"]),
+      [class*="widescreen hidden"],
+      [class*="widescreen or lower hidden"] {
+        display: none !important;
+      }
+    }
+    .created.hidden {
+      display: none;
+    }
+    .day {
+      margin-bottom: 30px;
+    }
+    .floating-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+    .navbar {
+      margin-top: 10px !important;
+    }
+    .content {
+      margin-bottom: 80px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui container">
+    <div class="ui menu navbar">
+      <a class="item" href="/">
+        <i class="home icon"></i>
+        <span class="mobile hidden">Accueil</span>
+      </a>
+      <a class="item" href="https://forms.gle/E3C5eN5mR94x5b2P6" target="_blank">
+        <i class="pencil icon"></i>
+        <span class="mobile hidden">Inscription</span>
+      </a>
+      <div class="right menu">
+        <a class="item" href="https://gemletremplin.fr">
+          <i class="globe icon"></i>
+          <span class="mobile hidden">gemletremplin.fr</span>
+        </a>
+        <div class="ui dropdown item">
+          <i class="wrench icon"></i>
+          <span class="mobile hidden">Options</span>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <a class="item" id="show-created">Afficher <i class="calendar alternate outline icon"></i></a>
+            <a class="item active" id="hide-created">Cacher <i class="calendar alternate outline icon"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <h1 class="ui center aligned icon header">
+        <i class="clipboard outline icon"></i>
+        <div class="content">
+          Inscriptions GEM Le Tremplin
+        </div>
+      </h1>
+      <div id="days" class="ui container"></div>
+      <div id="loading" class="ui active inverted dimmer">
+        <div class="ui text loader">Chargement des données...</div>
+      </div>
+    </div>
+    <a class="floating-btn" target="_blank" href="https://forms.gle/E3C5eN5mR94x5b2P6">
+      <span class="ui circular blue icon button"><i class="pencil icon"></i></span>
+      <span>S'inscrire sur une journée</span>
+    </a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment-with-locales.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+  <script>
+    const MAX_USER = 4;
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1Jitq0UBTp6KNyQrptDvDBB94iNey1-MHJ218cCNY20o/export?format=csv'
+
+    moment.locale("fr");
+
+    function warning(title, description) {
+      return `
+        <div class="ui negative icon message">
+          <i class="fire icon"></i>
+          <div class="content">
+            <div class="header">
+              ${title}
+            </div>
+            ${description}
+          </div>
+        </div>
+      `;
+    }
+
+    function clean(data) {
+      let cleaned = [];
+
+      for (let [createdStr, name, dateStr] of data.data.slice(1)) {
+        if (createdStr == "") {
+          continue;
+        }
+
+        let date = moment(dateStr, "DD/MM/YYYY HH:mm:ss");
+        if (date.isBefore(moment().startOf('day'))) {
+          continue;
+        }
+
+        let created = moment(createdStr, "DD/MM/YYYY HH:mm:ss");
+        cleaned.push({date: date, name: name, created: created});
+      }
+
+      cleaned.sort((a, b) => a.date.isBefore(b.date) ? -1 : 1);
+      return cleaned;
+    }
+
+    function decouple(cleaned) {
+      let ids = [];
+      let data = {};
+
+      for (let row of cleaned) {
+        let id = row.date.format('DD/MM/YYYY');
+        if (ids.indexOf(id) == -1) {
+          ids.push(id);
+        }
+        if (!(id in data)) {
+          data[id] = [];
+        }
+        data[id].push(row);
+      }
+
+      return [ids, data];
+    }
+
+    $(document).ready(() => {
+      $('.ui.dropdown').dropdown();
+
+      $('#show-created').on('click', function() {
+        for (let el of document.getElementsByClassName('created')) {
+          el.classList.remove('hidden');
+        }
+      });
+
+      $('#hide-created').on('click', function() {
+        for (let el of document.getElementsByClassName('created')) {
+          el.classList.add('hidden');
+        }
+      });
+
+      Papa.parse(CSV_URL, {
+        download: true,
+        complete: function(csv_data, file) {
+          let cleaned = clean(csv_data);
+          let [ids, data] = decouple(cleaned);
+
+          let html = [];
+          for (let id of ids) {
+            let d = data[id];
+
+            html.push(`<div class="day">`);
+            html.push(`<h2 class="ui header">${d[0].date.format("dddd DD MMMM YYYY")}</h2>`);
+            if (d.length >= MAX_USER) {
+              
+              html.push(warning('Complet', `<div>Il y a déjà ${d.length} personnes inscrites pour ce jour-ci.</div><div>Le nombre de personnes pouvant être présente dans les locaux étant limité, merci de ne pas vous inscrire pour cette date.</div>`));
+            }
+            html.push(`<table class="ui unstackable single line striped blue table">`);
+                  // html.push(`<thead><tr><th>Date</th><th>Nom</th><th>Création</th></tr></thead>`);
+                  html.push(`<tbody>`);
+                  for (let user of d) {
+                    html.push(`<tr>`);
+                    html.push(`<td class="hour one wide">${user.date.format("HH:mm")}</td>`);
+                    html.push(`<td class="name">${user.name}</td>`);
+                    html.push(`<td class="created hidden right aligned">${user.created.format('DD/MM/YYYY HH:mm')}</td>`);
+                    html.push(`</tr>`);
+                  }
+                  html.push(`</tbody>`);
+                  html.push(`</table>`);
+                  html.push(`</div>`);
+                }
+
+                document.getElementById('days').innerHTML = html.join('\n');
+
+                $('#loading').hide();
+              }
+            });
+    });
+  </script>
+</body>
+</html>
