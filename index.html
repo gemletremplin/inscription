@@ -305,7 +305,7 @@
               let left = MAX_USER - d.length;
               let plural = (left > 1) ? 's' : '';
               html.push(`
-                <a class="ui blue basic button" href="${href}">
+                <a class="ui blue basic button subscribe" href="${href}">
                   <i class="pencil icon"></i> S'inscrire
                 </a> <span class="ui left pointing label">${left} place${plural} restante${plural}</span>
               `);
@@ -316,6 +316,17 @@
           document.getElementById('days').innerHTML = html.join('\n');
 
           $('#loading').hide();
+          $('.subscribe').mouseenter(function(){
+            $(this).next()
+              .transition({
+                animation: 'vertical flip',
+                duration: 150,
+                queue: false,
+                onComplete: () => {
+                  $(this).next().transition('vertical flip', 150);
+                }
+              });
+          });
         }
       });
     });
