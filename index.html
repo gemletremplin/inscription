@@ -80,6 +80,10 @@
     .content {
       margin-bottom: 80px;
     }
+    tr.overflow {
+      text-decoration: line-through;
+      color: #909090;
+    }
   </style>
 </head>
 <body>
@@ -190,6 +194,19 @@
       return [ids, data];
     }
 
+    function overflow(data) {
+      let names = [];
+      let dCopy = [...data];
+      dCopy.sort((a, b) => a.created.isBefore(b.created) ? -1 : 1);
+      dCopy = dCopy.slice(MAX_USER);
+
+      for (let i=0; i<dCopy.length; i++) {
+        names.push(dCopy[i].name);
+      }
+
+      return names;
+    }
+
     $(document).ready(() => {
       $('.ui.dropdown').dropdown();
 
@@ -223,8 +240,11 @@
             html.push(`<table class="ui unstackable single line striped blue table">`);
             html.push(`<tbody>`);
 
+            let names = overflow(d);
+
             for (let user of d) {
-              html.push(`<tr>`);
+              let overflowClass = names.indexOf(user.name) !== -1 ? ' class="overflow"' : '';
+              html.push(`<tr${overflowClass}>`);
               html.push(`<td class="hour one wide">${user.date.format("HH:mm")}</td>`);
               html.push(`<td class="name">${user.name}</td>`);
               html.push(`<td class="created hidden right aligned">${user.created.format('DD/MM/YYYY HH:mm')}</td>`);
