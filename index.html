@@ -242,6 +242,9 @@
     }
 
     function formLink(opts) {
+      if (!opts) {
+        opts = {};
+      }
       let link = FORM_TPL;
       link = link.replace('{day}', opts.day ? opts.day : '');
       link = link.replace('{hour}', opts.hour ? opts.hour: '');
@@ -252,7 +255,7 @@
     $(document).ready(() => {
       $('.ui.dropdown').dropdown();
       $("#opening").html(opening());
-      $('#add-opening-day').attr('href', formLink({name: "Julien ou Bérénice"}));
+      $('#add-opening-day').attr('href', formLink());
 
       $('#show-created').on('click', function() {
         for (let el of document.getElementsByClassName('created')) {
