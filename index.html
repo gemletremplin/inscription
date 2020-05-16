@@ -302,7 +302,11 @@
             html.push(`</table>`);
             if (d.length < MAX_USER) {
               let href = formLink({day: d[0].date.format('YYYY-MM-DD'), hour: '14:00'});
-              html.push(`<a class="ui button" href="${href}"><i class="icon pencil"></i> S'inscrire</a>`)
+              html.push(`
+                <a class="ui blue basic button" href="${href}">
+                  <i class="pencil icon"></i> S'inscrire
+                </a>
+              `);
             }
             html.push(`</div>`);
           }
