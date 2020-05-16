@@ -218,29 +218,29 @@
             html.push(`<div class="day">`);
             html.push(`<h2 class="ui header">${d[0].date.format("dddd DD MMMM YYYY")}</h2>`);
             if (d.length >= MAX_USER) {
-              
               html.push(warning('Complet', `<div>Il y a déjà ${d.length} personnes inscrites pour ce jour-ci.</div><div>Le nombre de personnes pouvant être présente dans les locaux étant limité, merci de ne pas vous inscrire pour cette date.</div>`));
             }
             html.push(`<table class="ui unstackable single line striped blue table">`);
-                  // html.push(`<thead><tr><th>Date</th><th>Nom</th><th>Création</th></tr></thead>`);
-                  html.push(`<tbody>`);
-                  for (let user of d) {
-                    html.push(`<tr>`);
-                    html.push(`<td class="hour one wide">${user.date.format("HH:mm")}</td>`);
-                    html.push(`<td class="name">${user.name}</td>`);
-                    html.push(`<td class="created hidden right aligned">${user.created.format('DD/MM/YYYY HH:mm')}</td>`);
-                    html.push(`</tr>`);
-                  }
-                  html.push(`</tbody>`);
-                  html.push(`</table>`);
-                  html.push(`</div>`);
-                }
+            html.push(`<tbody>`);
 
-                document.getElementById('days').innerHTML = html.join('\n');
+            for (let user of d) {
+              html.push(`<tr>`);
+              html.push(`<td class="hour one wide">${user.date.format("HH:mm")}</td>`);
+              html.push(`<td class="name">${user.name}</td>`);
+              html.push(`<td class="created hidden right aligned">${user.created.format('DD/MM/YYYY HH:mm')}</td>`);
+              html.push(`</tr>`);
+            }
 
-                $('#loading').hide();
-              }
-            });
+            html.push(`</tbody>`);
+            html.push(`</table>`);
+            html.push(`</div>`);
+          }
+
+          document.getElementById('days').innerHTML = html.join('\n');
+
+          $('#loading').hide();
+        }
+      });
     });
   </script>
 </body>
