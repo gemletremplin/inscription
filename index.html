@@ -10,7 +10,6 @@
       margin: 10px 0 0 0 !important;
       padding: 0 !important;
     }
-
     h2 {
       text-transform: capitalize !important;
     }
@@ -33,6 +32,20 @@
     tr.overflow {
       text-decoration: line-through;
       color: #909090;
+    }
+    #refresh {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+    }
+    #refresh span {
+      display: none !important;
+    }
+    #refresh:hover span {
+      display: inline !important;
+    }
+    #refresh {
+      background-color: white;
     }
   </style>
 </head>
@@ -75,11 +88,15 @@
     <div class="content">
       <div id="opening"></div>
       <div id="days"></div>
-      <div id="loading" class="ui active inverted dimmer">
+      <div id="loading" class="ui active inverted page dimmer">
         <div class="ui text loader">Chargement des données...</div>
       </div>
     </div>
 
+  </div>
+
+  <div id="refresh">
+    <a class="ui basic reversed icon button"><span>Rafraichir les données</span> <i class="icon sync"></i></a>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment-with-locales.min.js"></script>
@@ -259,22 +276,8 @@
       return html;
     }
 
-    $(document).ready(() => {
-      $('.ui.dropdown').dropdown();
-      $("#opening").html(opening());
-      $('#add-opening-day').attr('href', formLink());
-
-      $('#show-created').on('click', function() {
-        for (let el of document.getElementsByClassName('created')) {
-          el.classList.remove('hidden');
-        }
-      });
-
-      $('#hide-created').on('click', function() {
-        for (let el of document.getElementsByClassName('created')) {
-          el.classList.add('hidden');
-        }
-      });
+    function load() {
+      $('#loading').show();
 
       Papa.parse(CSV_URL, {
         download: true,
@@ -298,6 +301,28 @@
           });
         }
       });
+    }
+
+    $(document).ready(() => {
+      $('.ui.dropdown').dropdown();
+      $("#opening").html(opening());
+      $('#add-opening-day').attr('href', formLink());
+
+      $('#show-created').on('click', function() {
+        for (let el of document.getElementsByClassName('created')) {
+          el.classList.remove('hidden');
+        }
+      });
+
+      $('#hide-created').on('click', function() {
+        for (let el of document.getElementsByClassName('created')) {
+          el.classList.add('hidden');
+        }
+      });
+
+      $('#refresh').on('click', e => load());
+
+      load();
     });
   </script>
 </body>
