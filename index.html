@@ -169,7 +169,7 @@
         }
 
         let date = moment(dateStr, "DD/MM/YYYY HH:mm:ss");
-        if (date.isBefore(moment().startOf('day'))) {
+        if (moment().isAfter(moment(date).startOf('day').add(18, 'hours'))) {
           continue;
         }
 
