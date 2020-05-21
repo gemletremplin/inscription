@@ -221,6 +221,11 @@
           .replace(/'/g, "&#039;");
     }
 
+    function nameHtml(raw) {
+      return escapeHtml(raw)
+        .replace(/\[(.*?)\]/g, '<span class="ui mini label">$1</span>')
+    }
+
     function formLink(opts) {
       if (!opts) {
         opts = {};
@@ -257,7 +262,7 @@
         html.push(`
           <tr${overflowClass}>
             <td class="hour one wide">${user.date.format("HH:mm")}</td>
-            <td class="name">${escapeHtml(user.name)}</td>
+            <td class="name">${nameHtml(user.name)}</td>
             <td class="created hidden right aligned">
               ${user.created.format('DD/MM/YYYY HH:mm')}
             </td>
