@@ -48,6 +48,9 @@
     #refresh {
       background-color: white;
     }
+    .divider.week {
+      color: #888888;
+    }
   </style>
 </head>
 <body>
@@ -237,6 +240,13 @@
       return link;
     }
 
+    function getWeek(now) {
+      let dateRef = moment([2019, 7, 19]).startOf("week"); // Semaine 1
+      let dateCurrentWeek = moment(now).startOf("week");
+      let weekDiff = parseInt(moment.duration(dateCurrentWeek.diff(dateRef)).asWeeks());
+      return (weekDiff % 3) + 1;
+    }
+
     function dayHtml(d, names) {
       let html = [];
       let left = MAX_USER - d.length;
@@ -300,9 +310,17 @@
 
     function daysHtml(ids, data) {
       let html = [];
+      let lastWeek = null;
 
       for (let id of ids) {
         let d = data[id];
+
+        let week = moment(id, "DD-MM-YYYY").startOf('week');
+        if (!lastWeek || !lastWeek.isSame(week)) {
+          html.push(`<div class="ui horizontal divider week">Semaine ${getWeek(week)}</div>`)
+        }
+        lastWeek = week;
+
         let names = overflow(d);
         html.push(...dayHtml(d, names));
       }
