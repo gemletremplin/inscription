@@ -354,10 +354,6 @@
                 }
               });
           });
-
-          $('.unsubscribe').on('click', e => {
-            $('.ui.modal').modal('show');
-          });
         }
       });
     }
@@ -380,6 +376,10 @@
       });
 
       $('#refresh').on('click', e => load());
+
+      $('.unsubscribe').on('click', e => {
+        $('.ui.modal').modal('show');
+      });
 
       load();
     });
