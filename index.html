@@ -249,9 +249,10 @@
       return (weekDiff % 3) + 1;
     }
 
-    function dayHtml(d, names) {
+    function dayHtml(d) {
       let html = [];
       let left = MAX_USER - d.length;
+      let names = overflow(d);
 
       html.push(`
         <div class="day">
@@ -324,8 +325,7 @@
         }
         lastWeek = week;
 
-        let names = overflow(d);
-        html.push(...dayHtml(d, names));
+        html.push(...dayHtml(d));
       }
 
       return html;
