@@ -137,32 +137,36 @@
 
     moment.locale("fr");
 
-    function warning(title, description) {
+    function message(opts) {
       return `
-        <div class="ui negative icon message">
-          <i class="fire icon"></i>
+        <div class="ui ${opts.type} icon message">
+          <i class="${opts.icon} icon"></i>
           <div class="content">
             <div class="header">
-              ${title}
+              ${opts.header}
             </div>
-            ${description}
+            ${opts.content}
           </div>
         </div>
       `;
     }
 
+    function warning(header, content) {
+      return message({
+        type: 'negative',
+        icon: 'fire',
+        header: header,
+        content: content
+      })
+    }
+
     function opening() {
-      return `
-        <div class="ui info icon message">
-          <i class="calendar alternate outline icon"></i>
-          <div class="content">
-            <div class="header">
-              Horaires d'ouverture
-            </div>
-            ${OPENING_TIME}
-          </div>
-        </div>
-      `;
+      return message({
+        type: 'info',
+        icon: 'calendar alternate outline',
+        header: `Horaires d'ouverture`,
+        content: OPENING_TIME
+      })
     }
 
     function clean(data) {
@@ -327,6 +331,15 @@
 
         html.push(...dayHtml(d));
       }
+
+      const nextWeek = moment(lastWeek).add(1, 'week')
+      html.push(`<div class="ui horizontal divider week">Semaine ${getWeek(nextWeek)}</div>`)
+      html.push(message({
+        type: 'info',
+        icon: 'clipboard outline',
+        header: `Comment s'inscrire sur les semaines suivantes ?`,
+        content: `Les inscriptions pour les semaines suivantes sont ajoutées les vendredi.`
+      }))
 
       return html;
     }
