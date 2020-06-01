@@ -221,6 +221,34 @@
       return names;
     }
 
+    function fixDuplicates(users) {
+      // Google Form has a bug which randomly adds a user submission more than once into his sheet.
+      // This patch the bug by keeping the most recent submission for each user.
+
+      let duplicates = {};
+      let newUsers = [];
+
+      // Put all duplicates of the same user in an array
+      for (let user of users) {
+        if (!(user.name in duplicates)) {
+          duplicates[user.name] = [];
+        }
+        duplicates[user.name].push(user);
+      }
+
+      // Only append the most recently created submission for each user in an array
+      for (let name in duplicates) {
+        let userDups = duplicates[name];
+        userDups.sort((a, b) => a.created.isBefore(b.created) ? -1 : 1);
+        let mostRecent = userDups[userDups.length - 1];
+        newUsers.push(mostRecent);
+      }
+
+      newUsers.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
+
+      return newUsers;
+    }
+
     function escapeHtml(text) {
       return text
           .replace(/&/g, "&amp;")
@@ -255,6 +283,7 @@
 
     function dayHtml(d) {
       let html = [];
+      d = fixDuplicates(d);
       let left = MAX_USER - d.length;
       let names = overflow(d);
 
