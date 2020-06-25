@@ -397,7 +397,12 @@
                 }
               });
           });
-        }
+        },
+        error: function(err, file, inputElem, reason) {
+          document.querySelector('#loading').innerHTML = warning(
+            `Une erreur est survenue pendant le chargement des données.`,
+            `Merci de contacter Julien pour vous inscrire lorsque le site ne fonctionne pas.`);
+        },
       });
     }
 
