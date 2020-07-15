@@ -131,8 +131,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
   <script>
     const MAX_USER = 8;
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSuErfOZ7PuVG_2sxTGYhkOn-DQwZX_lNRT9SyMSfb8ETC3VhgzekieUTo2jfaq9LA42CSvR0xRGTiw/pub?output=csv'
-    const OPENING_TIME = "Sauf exception, tous les mardi, jeudi et samedi, de 14h à 18h.";
+    const CSV_URL = 'https://docs.google.com/spreadsheets/u/1/d/1bHDP4OdkokAs9Ui26oox4FUySBq_Xtl91RTA8quQ-0k/export?format=csv'
+    const OPENING_TIME = `
+      <div>Semaine 1: Mardi, Jeudi, Samedi de 14h à 18h</div>
+      <div>Semaine 2: Lundi, Mercredi, Vendredi de 14h à 18h</div>
+      <div>Semaine 3: Mardi, Mercredi, Vendredi, Samedi de 14h à 18h</div>
+    `;
     const FORM_TPL = "https://docs.google.com/forms/d/e/1FAIpQLSed5CaBRgGD6sQbBx7--twL8g0LXSZzkW9sJu42B-JygmK44w/viewform?usp=pp_url&entry.799232329={name}&entry.117541986={day}+{hour}"
 
     moment.locale("fr");
@@ -275,7 +279,7 @@
     }
 
     function getWeek(now) {
-      let dateRef = moment([2019, 7, 19]).startOf("week"); // Semaine 1
+      let dateRef = moment([2019, 7, 26]).startOf("week"); // Semaine 1
       let dateCurrentWeek = moment(now).startOf("week");
       let weekDiff = parseInt(moment.duration(dateCurrentWeek.diff(dateRef)).asWeeks());
       return (weekDiff % 3) + 1;
